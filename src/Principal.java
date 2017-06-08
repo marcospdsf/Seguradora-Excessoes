@@ -19,8 +19,8 @@ public class Principal extends ProcuraGeraCliente {
 			switch (opcao) {
 			case 0:
 				pessoaFisica.cadastro();
-				pessoaFisica.calculoSeguroResidencial();
 				if (saiu == false) {
+					pessoaFisica.calculoSeguroResidencial();
 					pessoaFisica.salvarCadastro();
 					pessoaFisica.gerarContrato();
 				}
@@ -28,8 +28,8 @@ public class Principal extends ProcuraGeraCliente {
 
 			case 1:
 				pessoaJuridica.cadastro();
-				pessoaJuridica.calculoSeguroEmpresarial();	
 				if (saiu == false) {
+					pessoaJuridica.calculoSeguroEmpresarial();	
 					pessoaJuridica.salvarCadastro();
 					pessoaJuridica.gerarContrato();
 				}
