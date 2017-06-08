@@ -22,20 +22,20 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 			cancelar = false;
 			ok = false;
 			saiu = false;
-			
+
 			do {
 				try {
 					razaoSocial = JOptionPane.showInputDialog("Digite o nome real da empresa:");
-					
+
 					File check = new File(razaoSocial + ".con");
 					if (razaoSocial != null && razaoSocial.length() > 0) {
 						ok = true;
 					} else if (razaoSocial.length() == 0 && razaoSocial != null) {
 						throw new CampoVazio();
-					}else if (check.exists() == true){
+					} else if (check.exists() == true) {
 						throw new ArquivoExistente();
 					}
-					
+
 				} catch (NullPointerException ex) {
 					cancelar = true;
 					saiu = true;
@@ -49,28 +49,28 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 				break;
 
 			ok = false;
-				
-				do {
-					try {
-						cliente = JOptionPane.showInputDialog("Digite o nome ficticio da empresa:");
 
-						if (cliente != null && cliente.length() > 0) {
-							ok = true;
-						} else if (cliente.length() == 0 && cliente != null) {
-							throw new CampoVazio();
-						}
-					} catch (NullPointerException ex) {
-						cancelar = true;
-						saiu = true;
-						break;
-					} catch (CampoVazio e) {
+			do {
+				try {
+					cliente = JOptionPane.showInputDialog("Digite o nome ficticio da empresa:");
+
+					if (cliente != null && cliente.length() > 0) {
+						ok = true;
+					} else if (cliente.length() == 0 && cliente != null) {
+						throw new CampoVazio();
 					}
-				} while (ok == false);
-
-				if (cancelar == true)
+				} catch (NullPointerException ex) {
+					cancelar = true;
+					saiu = true;
 					break;
+				} catch (CampoVazio e) {
+				}
+			} while (ok == false);
 
-				ok = false;
+			if (cancelar == true)
+				break;
+
+			ok = false;
 
 			do {
 				try {
@@ -85,8 +85,8 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 					cancelar = true;
 					saiu = true;
 					break;
-				} catch (CampoVazio e){
-					}
+				} catch (CampoVazio e) {
+				}
 			} while (ok == false);
 
 			if (cancelar == true)
@@ -119,13 +119,16 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 
 			do {
 				try {
-					numeroF = Integer
-							.parseInt(JOptionPane.showInputDialog("Digite o numero de funcionarios:"));
+					check = JOptionPane.showInputDialog("Digite o numero de funcionarios:");
 
-					check = String.valueOf(numeroF);
-
-					if (check != null && check.length() > 0 && checar.isNumeric(check) == true) {
+					if (check != null && check.length() > 0 && checar.isNumeric(check) == true
+							&& check.indexOf(",") == -1) {
 						ok = true;
+					} else if (check != null && checar.isNumeric(check) == false || check.length() > 10
+							|| check.indexOf(",") != -1) {
+						throw new NumberFormatException();
+					} else if (check.length() == 0 && check != null) {
+						throw new CampoVazio();
 					}
 
 				} catch (NumberFormatException ex) {
@@ -134,22 +137,28 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 					cancelar = true;
 					saiu = true;
 					break;
+				} catch (CampoVazio ex) {
+
 				}
 			} while (ok == false);
 
 			if (cancelar == true)
 				break;
+			else
+				numeroF = Integer.parseInt(check);
 
 			ok = false;
 
 			do {
 				try {
-					numeroV = Integer.parseInt(JOptionPane.showInputDialog("Digite o numero de visitas:"));
+					check = JOptionPane.showInputDialog("Digite o numero de visitas:");
 
-					check = String.valueOf(numeroV);
-
-					if (check != null && check.length() > 0 && checar.isNumeric(check) == true) {
+					if (check != null && check.length() > 0 && checar.isNumeric(check) == true && check.indexOf(",") == -1) {
 						ok = true;
+					} else if (check != null && checar.isNumeric(check) == false || check.length() > 10 || check.indexOf(",") != -1) {
+						throw new NumberFormatException();
+					} else if (check.length() == 0 && check != null) {
+						throw new CampoVazio();
 					}
 
 				} catch (NumberFormatException ex) {
@@ -158,11 +167,18 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 					cancelar = true;
 					saiu = true;
 					break;
+				} catch (CampoVazio ex) {
+
 				}
 			} while (ok == false);
 
 			if (cancelar == true)
 				break;
+			else
+				numeroV = Integer.parseInt(check);
+
+			ok = false;
+
 
 			Object[] ramoEscolha = { "Industria", "Comercio", "Agropecuaria", "cancelar" };
 
@@ -198,7 +214,7 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 		}
 
 		for (i = 1; i <= numeroV; i++) {
-			if (i % 200 == 0) 
+			if (i % 200 == 0)
 				porFunc += 0.003;
 		}
 
@@ -214,13 +230,13 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 			seguro += valor_imovel * 0.005;
 		}
 	}
-	
+
 	public void salvarCadastro() {
-		VariaveisArquivosBin c = new VariaveisArquivosBin(cliente, 0, seguro,false);
+		VariaveisArquivosBin c = new VariaveisArquivosBin(cliente, 0, seguro, false);
 
 		try {
 
-			FileOutputStream saidaArquivo = new FileOutputStream(razaoSocial+".bin");
+			FileOutputStream saidaArquivo = new FileOutputStream(razaoSocial + ".bin");
 			ObjectOutputStream saidaObjeto = new ObjectOutputStream(saidaArquivo);
 			saidaObjeto.writeObject(c);
 
@@ -249,10 +265,10 @@ public class ContratoComercial extends ProcuraGeraCliente implements Interface {
 
 				FileWriter arq = new FileWriter(razaoSocial + ".con");
 				PrintWriter gravarArq = new PrintWriter(arq);
-				gravarArq.printf("CONTRATO%n" + "%nRazão Social: " + razaoSocial + "%nNome ficticio: " + cliente + "%nEndereço: "
-						+ endereco + "%nRamo: " + ramoM + "%nValor do imóvel: " + f.format(valor_imovel)
-						+ "%nNúmero de Funcionários: " + numeroF + "%nNúmero de visitas: " + numeroV
-						+ "%nValor do seguro: " + f.format(seguro));
+				gravarArq.printf("CONTRATO%n" + "%nRazão Social: " + razaoSocial + "%nNome ficticio: " + cliente
+						+ "%nEndereço: " + endereco + "%nRamo: " + ramoM + "%nValor do imóvel: "
+						+ f.format(valor_imovel) + "%nNúmero de Funcionários: " + numeroF + "%nNúmero de visitas: "
+						+ numeroV + "%nValor do seguro: " + f.format(seguro));
 
 				JOptionPane.showMessageDialog(null, "Contrato salvo com sucesso como " + razaoSocial + ".con !");
 				arq.close();

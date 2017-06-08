@@ -22,7 +22,7 @@ public class ContratoMoradia extends ProcuraGeraCliente implements Interface {
 			cancelar = false;
 			ok = false;
 			saiu = false;
-			
+
 			do {
 				try {
 					cliente = JOptionPane.showInputDialog("Digite o nome do cliente:");
@@ -112,15 +112,18 @@ public class ContratoMoradia extends ProcuraGeraCliente implements Interface {
 			}
 
 			cancelar = true;
-			
+
 			do {
 				try {
-					idCliente = Integer.parseInt(JOptionPane.showInputDialog("Digite o id do Cliente:"));
+					check = JOptionPane.showInputDialog("Digite o id do Cliente:");
 
-					check = String.valueOf(idCliente);
-
-					if (check != null && check.length() > 0 && checar.isCurrency(check) == true) {
+					if (check != null && check.length() > 0 && checar.isCurrency(check) == true
+							&& check.indexOf(",") == -1) {
 						ok = true;
+					} else if (check.length() == 0 && check != null) {
+						throw new CampoVazio();
+					} else if (check != null && checar.isNumeric(check) == false || check.length() > 10 || check.indexOf(",") != -1) {
+						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "Você digitou um valor não aceito ou não digitou nada.");
@@ -128,12 +131,16 @@ public class ContratoMoradia extends ProcuraGeraCliente implements Interface {
 					cancelar = true;
 					saiu = true;
 					break;
+				} catch (CampoVazio ex) {
+
 				}
 			} while (ok == false);
 
 			if (cancelar == true)
 				break;
-
+			else
+				idCliente = Integer.parseInt(check);
+			break;
 		} while (cancelar == false);
 
 	}
@@ -153,11 +160,11 @@ public class ContratoMoradia extends ProcuraGeraCliente implements Interface {
 	}
 
 	public void salvarCadastro() {
-		VariaveisArquivosBin c = new VariaveisArquivosBin(cliente, idCliente, seguro,true);
+		VariaveisArquivosBin c = new VariaveisArquivosBin(cliente, idCliente, seguro, true);
 
 		try {
 
-			FileOutputStream saidaArquivo = new FileOutputStream(idCliente+".bin");
+			FileOutputStream saidaArquivo = new FileOutputStream(idCliente + ".bin");
 			ObjectOutputStream saidaObjeto = new ObjectOutputStream(saidaArquivo);
 			saidaObjeto.writeObject(c);
 
@@ -191,9 +198,9 @@ public class ContratoMoradia extends ProcuraGeraCliente implements Interface {
 
 				FileWriter arq = new FileWriter(idCliente + ".con");
 				PrintWriter gravarArq = new PrintWriter(arq);
-				gravarArq.printf("CONTRATO%n%nId do Cliente: " + idCliente +"%nNome do cliente: " + cliente + "%nEndereço: "
-						+ endereco + "%nTipo de residência: " + tipoM + "%nZona: " + zonaM + "%nValor do imóvel: "
-						+ f.format(valor_imovel) + "%nValor do seguro: " + f.format(seguro));
+				gravarArq.printf("CONTRATO%n%nId do Cliente: " + idCliente + "%nNome do cliente: " + cliente
+						+ "%nEndereço: " + endereco + "%nTipo de residência: " + tipoM + "%nZona: " + zonaM
+						+ "%nValor do imóvel: " + f.format(valor_imovel) + "%nValor do seguro: " + f.format(seguro));
 
 				JOptionPane.showMessageDialog(null, "Contrato salvo como " + idCliente + ".con !");
 				arq.close();
